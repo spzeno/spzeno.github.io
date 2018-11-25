@@ -1,17 +1,12 @@
-html {
-  font-size: 10px; /* px 表示 “像素（pixels）”: 这个基础字号现在高10像素 */
-  background-color: #00539F;
-
-}
 h1 {
   font-size: 30px;
   text-align: center;
   letter-spacing: 3px;
   margin: 0;
   padding: 20px 0;    
-  color: #00539F;
-  text-shadow: 3px 3px 1px black;
+  color: #00FF00;
 }
+/*
 body {
   width: 600px;
   margin: 0 auto;
@@ -22,4 +17,11 @@ body {
 img {
   display: block;
   margin: 0 auto;
-}
+}*/
+button{
+	border:none;
+	outline:none;
+	display:block;
+	margin:0 auto;
+	background-color: transparent;
+  }

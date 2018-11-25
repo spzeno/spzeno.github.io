@@ -2,19 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>My test page</title>
+    <title>spzeno的代码仓库&blog&diary</title>
   </head>
+<script>
+
+var i = 1;
+function nextImg(){
+	i++;
+	var next = document.getElementById("nImg");
+	next.src = i+".gif";
+	if(i==10){
+	i=0;
+	} 
+}
+</script>
   <link href="styles/style.css" rel="stylesheet" type="text/css">
   <body>
-	<h1>YuruYuri</h1>
-	<img src="images/3.jpg" alt="Akaza Akari">
-	<p>I LOVE Akaza Akari!</p>
-	<ul>
-		<li>歳納京子</li>
-		<li>赤座あかり</li>
-	</ul>
-	<a href="https://zh.moegirl.org/%E6%91%87%E6%9B%B3%E7%99%BE%E5%90%88">link to moegirl</a>
-	<button>Change user</button>
-	<script src="scripts/main.js"></script>
+	<h1>身处寒夜，把握星光</h1>
+    <div>
+      <button onclick="nextImg()"><img src="1.gif" id="nImg" /></button>
+	</div>
   </body>
 </html>
