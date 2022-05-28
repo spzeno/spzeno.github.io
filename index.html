@@ -155,7 +155,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/28/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/28/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +169,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/05/28/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+            <a href="/2022/05/28/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">代理技术</a>
         </h2>
 
         <div class="post-meta">
@@ -178,8 +178,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2022-05-28 18:41:30" itemprop="dateCreated datePublished" datetime="2022-05-28T18:41:30+08:00">2022-05-28</time>
+              <time title="Created: 2022-05-28 19:44:11 / Modified: 19:47:56" itemprop="dateCreated datePublished" datetime="2022-05-28T19:44:11+08:00">2022-05-28</time>
             </span>
 
           
@@ -193,19 +194,90 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+          <h1 id="代理技术"><a href="#代理技术" class="headerlink" title="代理技术"></a>代理技术</h1><h2 id="代理协议工作在哪一层"><a href="#代理协议工作在哪一层" class="headerlink" title="代理协议工作在哪一层"></a>代理协议工作在哪一层</h2><p>Socks代理协议是一种工作在<em><strong>线路层</strong></em>的协议，HTTP代理协议是一种工作在<em><strong>应用层</strong></em>的协议。</p>
+<h2 id="基于虚拟设备TUN-x2F-TAP技术的“真”全局代理"><a href="#基于虚拟设备TUN-x2F-TAP技术的“真”全局代理" class="headerlink" title="基于虚拟设备TUN&#x2F;TAP技术的“真”全局代理"></a>基于虚拟设备TUN&#x2F;TAP技术的“真”全局代理</h2><p> SOCKS5工作在线路层，<strong>SOCKS</strong>协议位于传输层(<strong>TCP</strong>&#x2F;<strong>UDP</strong>等)与应用层之间，所以能代理TCP和UDP的网络流量，<strong>对于之下的网络流量，就无能为力了</strong>。</p>
+<p>TUN2SOCKS使用tun网卡实现了更加底层的流量代理，这种全局代理不仅可以代理传输层流量，还可以代理其它所有应用程序的请求流量，比如代理游戏的流量，代理所有命令行工具的流量。</p>
+<p>一般的代理软件的“全局代理”指的是不论访问的IP是哪的全部都走代理，但是这种代理软件使用的代理协议的工作层次是<strong>不够底层</strong>的，在cmd会发现<strong>无法ping通google</strong>（但是<strong>使用curl却能够获得google的html内容</strong>，应该是因为ping走的是ICMP而curl走的是HTTP）。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220525102729845.png" alt="image-20220525102729845"></p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220525104450542.png" alt="image-20220525104235009"></p>
+<p>而像Netch等比较专业的代理软件则使用了tun2socks等虚拟网卡技术，在使用这种软件的全局代理时是可以在cmd中使用ping通google的。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220525103044641.png" alt="image-20220525103044641"></p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220525104235009.png" alt="image-20220525105021815"></p>
+<p>因此，像要使用pip、apt-get等需要在shell中访问外网的场景时，强烈推荐Netch等使用基于虚拟网卡的能够代理低层数据包的软件。</p>
+<h2 id="如何使得虚拟机的流量也走代理"><a href="#如何使得虚拟机的流量也走代理" class="headerlink" title="如何使得虚拟机的流量也走代理"></a>如何使得虚拟机的流量也走代理</h2><p><strong>场景：</strong></p>
+<ol>
+<li>VMware Ubuntu虚拟机要使用apt等安装软件<em><strong>（显然我们不想搞什么换源）</strong></em></li>
+<li>开发板（例如PYNQ）上跑的Ubuntu要使用apt等安装软件<em><strong>（显然我们不想搞什么换源）</strong></em>，且开发板是通过网线与PC连接的。</li>
+</ol>
+<p><strong>方法：</strong></p>
+<p>首先在宿主机上打开代理，并且确定<em><strong>允许其他设备连入Socks5本地端口</strong></em></p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220525105021815.png" alt="image-20220525102255395"></p>
+<p>之后在虚拟机终端中输入以下命令：</p>
+<p><code>export  ALL_PROXY=socks5://192.168.86.1:2801</code></p>
+<p>注意更改IP和端口。</p>
+<h2 id="待研究的内容"><a href="#待研究的内容" class="headerlink" title="待研究的内容"></a>待研究的内容</h2><p>KCP</p>
+<p>DNS Hijack（AioDNS）</p>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/28/My-first-Post/">
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZhuZikang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhuZikang's Github Page">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/28/My-first-Post/" class="post-title-link" itemprop="url">My first Post</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-05-28 19:41:13 / Modified: 19:43:35" itemprop="dateCreated datePublished" datetime="2022-05-28T19:41:13+08:00">2022-05-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>And here we start a new journey.</p>
+<p>pic bed test: </p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220522223044162.png" alt="image-20220522223044162"></p>
 
       
     </div>
@@ -287,9 +359,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
       </div>
   </nav>
 </div>
