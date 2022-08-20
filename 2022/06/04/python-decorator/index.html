@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190247526.png">
 <meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190426304.png">
 <meta property="article:published_time" content="2022-06-04T10:35:34.000Z">
-<meta property="article:modified_time" content="2022-06-04T11:10:49.390Z">
+<meta property="article:modified_time" content="2022-08-20T08:42:34.437Z">
 <meta property="article:author" content="ZhuZikang">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
@@ -219,10 +219,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-04 18:35:34 / 修改时间：19:10:49" itemprop="dateCreated datePublished" datetime="2022-06-04T18:35:34+08:00">2022-06-04</time>
+              <time title="创建时间：2022-06-04 18:35:34" itemprop="dateCreated datePublished" datetime="2022-06-04T18:35:34+08:00">2022-06-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-20 16:42:34" itemprop="dateModified" datetime="2022-08-20T16:42:34+08:00">2022-08-20</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -247,9 +253,44 @@
 <p>难点：递归函数，举例来说，假设我调用fibonacci(4)，我不希望计时只计最外层的函数，而是希望每一个被调用的fibonacci()都输出，fib的调用层次如下图所示</p>
 <p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190247526.png" alt="image-20220604190247526"></p>
 <p>也就是计时器应该输出5次函数运行耗时</p>
-<p>解决方案：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/197643740">https://zhuanlan.zhihu.com/p/197643740</a> ，运行结果：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/197643740">解决方案</a>，运行结果：</p>
 <p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190426304.png" alt="image-20220604190426304"></p>
 <p>感想（？）：Python好强大</p>
+<h1 id="关于Python装饰器模式和函数式编程的关系："><a href="#关于Python装饰器模式和函数式编程的关系：" class="headerlink" title="关于Python装饰器模式和函数式编程的关系："></a>关于Python装饰器模式和函数式编程的关系：</h1><h1 id="Python-的-Decorator"><a href="#Python-的-Decorator" class="headerlink" title="Python 的 Decorator"></a>Python 的 Decorator</h1><blockquote>
+<p>Python 的 Decorator 在使用上和 Java 的 Annotation（以及 C# 的 Attribute）很相似，就是在方法名前面加一个 <a target="_blank" rel="noopener" href="https://my.oschina.net/xrf116">@XXX</a> 注解来为这个方法装饰一些东西。但是，Java&#x2F;C# 的 Annotation 也很让人望而却步，太过于复杂了。你要玩它，需要先了解一堆 Annotation 的类库文档，感觉几乎就是在学另外一门语言。</p>
+<p>而 Python 使用了一种相对于 Decorator Pattern 和 Annotation 来说非常优雅的方法，这种方法不需要你去掌握什么复杂的 OO 模型或是 Annotation 的各种类库规定，完全就是语言层面的玩法：一种函数式编程的技巧。</p>
+<p>这是我最喜欢的一个模式了，也是一个挺好玩儿的东西，这个模式动用了函数式编程的一个技术——用一个函数来构造另一个函数。</p>
+<p>好了，我们先来点感性认识，看一个 Python 修饰器的 Hello World 代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>(<span class="params">fn</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>():</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;hello, %s&quot;</span> % fn.__name__</span><br><span class="line">        fn()</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;goodbye, %s&quot;</span> % fn.__name__</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@hello</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">Hao</span>():</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;i am Hao Chen&quot;</span></span><br><span class="line"></span><br><span class="line">Hao()</span><br></pre></td></tr></table></figure>
+
+<p>代码的执行结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python hello.py</span><br><span class="line">hello, Hao</span><br><span class="line">i am Hao Chen</span><br><span class="line">goodbye, Hao</span><br></pre></td></tr></table></figure>
+
+<p>你可以看到如下的东西：</p>
+<ol>
+<li>函数<code>Hao</code>前面有个 <a target="_blank" rel="noopener" href="https://my.oschina.net/flyinghawk">@hello</a> 的“注解”，<code>hello</code>就是我们前面定义的函数<code>hello</code>；</li>
+<li>在<code>hello</code>函数中，其需要一个<code>fn</code>的参数（这就是用来做回调的函数）；</li>
+<li>hello 函数中返回了一个 inner 函数<code>wrapper</code>，这个<code>wrapper</code>函数回调了传进来的<code>fn</code>，并在回调前后加了两条语句。</li>
+</ol>
+<p>对于 Python 的这个 @注解语法糖（syntactic sugar）来说，当你在用某个 @decorator 来修饰某个函数<code>func</code>时，如下所示:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>其解释器会解释成下面这样的语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func = decorator(func)</span><br></pre></td></tr></table></figure>
+
+<p>嘿！这不就是把一个函数当参数传到另一个函数中，然后再回调吗？是的。但是，我们需要注意，那里还有一个赋值语句，把 decorator 这个函数的返回值赋值回了原来的<code>func</code>。</p>
+<p>我们再来看一个带参数的玩法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">makeHtmlTag</span>(<span class="params">tag, *args, **kwds</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">real_decorator</span>(<span class="params">fn</span>):</span><br><span class="line">        css_class = <span class="string">&quot; class=&#x27;&#123;0&#125;&#x27;&quot;</span>.<span class="built_in">format</span>(kwds[<span class="string">&quot;css_class&quot;</span>]) \</span><br><span class="line">                                     <span class="keyword">if</span> <span class="string">&quot;css_class&quot;</span> <span class="keyword">in</span> kwds <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapped</span>(<span class="params">*args, **kwds</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&lt;&quot;</span>+tag+css_class+<span class="string">&quot;&gt;&quot;</span> + fn(*args, **kwds) + <span class="string">&quot;&lt;/&quot;</span>+tag+<span class="string">&quot;&gt;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> wrapped</span><br><span class="line">    <span class="keyword">return</span> real_decorator</span><br><span class="line"></span><br><span class="line"><span class="meta">@makeHtmlTag(<span class="params">tag=<span class="string">&quot;b&quot;</span>, css_class=<span class="string">&quot;bold_css&quot;</span></span>)</span></span><br><span class="line"><span class="meta">@makeHtmlTag(<span class="params">tag=<span class="string">&quot;i&quot;</span>, css_class=<span class="string">&quot;italic_css&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> hello()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &lt;b class=&#x27;bold_css&#x27;&gt;&lt;i class=&#x27;italic_css&#x27;&gt;hello world&lt;/i&gt;&lt;/b&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面这个例子中，我们可以看到：<code>makeHtmlTag</code>有两个参数。所以，为了让<code>hello = makeHtmlTag(arg1, arg2)(hello)</code>成功，<code>makeHtmlTag</code>必需返回一个 decorator（这就是为什么我们在<code>makeHtmlTag</code>中加入了<code>real_decorator()</code>）。</p>
+<p>这样一来，我们就可以进入到 decorator 的逻辑中去了——decorator 得返回一个 wrapper，wrapper 里回调<code>hello</code>。看似那个<code>makeHtmlTag()</code>写得层层叠叠，但是，已经了解了本质的我们觉得写得很自然。</p>
+<p>我们再来看一个为其它函数加缓存的示例:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">memoization</span>(<span class="params">fn</span>):</span><br><span class="line">    cache = &#123;&#125;</span><br><span class="line">    miss = <span class="built_in">object</span>()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @wraps(<span class="params">fn</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args</span>):</span><br><span class="line">        result = cache.get(args, miss)</span><br><span class="line">        <span class="keyword">if</span> result <span class="keyword">is</span> miss:</span><br><span class="line">            result = fn(*args)</span><br><span class="line">            cache[args] = result</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@memoization</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> n</span><br><span class="line">    <span class="keyword">return</span> fib(n - <span class="number">1</span>) + fib(n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上面这个例子中，是一个斐波那契数例的递归算法。我们知道，这个递归是相当没有效率的，因为会重复调用。比如：我们要计算 fib(5)，于是其分解成<code>fib(4) + fib(3)</code>，而<code>fib(4)</code>分解成<code>fib(3) + fib(2)</code>，<code>fib(3)</code>又分解成<code>fib(2) + fib(1)</code>……你可看到，基本上来说，<code>fib(3)</code>,<code>fib(2)</code>,<code>fib(1)</code>在整个递归过程中被调用了至少两次。</p>
+<p>而我们用 decorator，在调用函数前查询一下缓存，如果没有才调用，有了就从缓存中返回值。一下子，这个递归从二叉树式的递归成了线性的递归。<code>wraps</code>的作用是保证<code>fib</code>的函数名不被<code>wrapper</code>所取代。</p>
+</blockquote>
+<p>​                                                                                                                                                          引用自<a target="_blank" rel="noopener" href="https://mendylee.gitbooks.io/geeker-study-courses/content/bian-cheng-fan-shi-pian.html">编程范式篇</a>，2022年8月20日记</p>
 <h1 id="Google-Colab"><a href="#Google-Colab" class="headerlink" title="Google Colab"></a>Google Colab</h1><p>测试代码：</p>
 <p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1GML_i9JVwJKSGYCPL8_Mi2CXixXix6DF?usp=sharing">https://colab.research.google.com/drive/1GML_i9JVwJKSGYCPL8_Mi2CXixXix6DF?usp=sharing</a></p>
 
@@ -352,7 +393,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-text">Python 装饰器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Google-Colab"><span class="nav-text">Google Colab</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-text">Python 装饰器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EPython%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9A"><span class="nav-text">关于Python装饰器模式和函数式编程的关系：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-%E7%9A%84-Decorator"><span class="nav-text">Python 的 Decorator</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Google-Colab"><span class="nav-text">Google Colab</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
