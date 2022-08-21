@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://spzeno.github.com/2022/08/20/lenet5/</loc>
+    <loc>http://spzeno.github.io/2022/08/20/lenet5/</loc>
     
     <lastmod>2022-08-20</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/2022/06/04/python-decorator/</loc>
+    <loc>http://spzeno.github.io/2022/06/04/python-decorator/</loc>
     
     <lastmod>2022-08-20</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/2022/07/24/%E5%A4%A7%E5%AD%A6/</loc>
+    <loc>http://spzeno.github.io/2022/07/24/%E5%A4%A7%E5%AD%A6/</loc>
     
     <lastmod>2022-07-24</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/2022/05/28/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/</loc>
+    <loc>http://spzeno.github.io/2022/05/28/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/</loc>
     
     <lastmod>2022-07-24</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/about/index.html</loc>
+    <loc>http://spzeno.github.io/about/index.html</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -47,7 +47,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/tags/index.html</loc>
+    <loc>http://spzeno.github.io/tags/index.html</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -56,7 +56,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/2022/05/28/My-first-Post/</loc>
+    <loc>http://spzeno.github.io/2022/05/28/My-first-Post/</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -65,7 +65,7 @@
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/categories/index.html</loc>
+    <loc>http://spzeno.github.io/categories/index.html</loc>
     
     <lastmod>2022-05-28</lastmod>
     
@@ -75,44 +75,44 @@
   
 
   <url>
-    <loc>http://spzeno.github.com/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>http://spzeno.github.com/tags/Hexo/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/tags/Hexo/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/tags/Python/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/tags/Python/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/tags/VPN/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/tags/VPN/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://spzeno.github.com/tags/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2022-08-20</lastmod>
+    <loc>http://spzeno.github.io/tags/%E7%94%9F%E6%B4%BB/</loc>
+    <lastmod>2022-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
