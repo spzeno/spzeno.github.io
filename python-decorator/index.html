@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="google-site-verification" content="bfIakpyl_YkDv32BYrtlFMM8_I0pBCVcwra8lIX4Rw8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha256-xejo6yLi6vGtAjcMIsY8BHdKsLg7QynVlFMzdQgUuy8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"spzeno.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="通过Python的装饰器设计模式实现对函数运行时间的计时，重点分析如何解决递归函数，Google Colab初试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python装饰器实现对（递归）函数运行时间计时">
+<meta property="og:url" content="https://spzeno.github.io/python-decorator/index.html">
+<meta property="og:site_name" content="ZhuZikang&#39;s Github Page">
+<meta property="og:description" content="通过Python的装饰器设计模式实现对函数运行时间的计时，重点分析如何解决递归函数，Google Colab初试">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190247526.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190426304.png">
+<meta property="article:published_time" content="2022-06-04T10:35:34.000Z">
+<meta property="article:modified_time" content="2022-08-24T10:06:27.187Z">
+<meta property="article:author" content="ZhuZikang">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190247526.png">
+
+
+<link rel="canonical" href="https://spzeno.github.io/python-decorator/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://spzeno.github.io/python-decorator/","path":"python-decorator/","title":"Python装饰器实现对（递归）函数运行时间计时"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Python装饰器实现对（递归）函数运行时间计时 | ZhuZikang's Github Page</title>
+  
+
+
+
+
+<link rel="dns-prefetch" href="https://hexo-review.vercel.app/">
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ZhuZikang's Github Page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">Python 装饰器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EPython%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">关于Python装饰器模式和函数式编程的关系：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-%E7%9A%84-Decorator"><span class="nav-number">3.</span> <span class="nav-text">Python 的 Decorator</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Google-Colab"><span class="nav-number">4.</span> <span class="nav-text">Google Colab</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZhuZikang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/spzeno" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;spzeno" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:spzeno02@gmail.com" title="E-Mail → mailto:spzeno02@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/spzeno2" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;spzeno2" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://spzeno.github.io/python-decorator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZhuZikang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhuZikang's Github Page">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Python装饰器实现对（递归）函数运行时间计时 | ZhuZikang's Github Page">
+      <meta itemprop="description" content="通过Python的装饰器设计模式实现对函数运行时间的计时，重点分析如何解决递归函数，Google Colab初试">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python装饰器实现对（递归）函数运行时间计时
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-04 18:35:34" itemprop="dateCreated datePublished" datetime="2022-06-04T18:35:34+08:00">2022-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-24 18:06:27" itemprop="dateModified" datetime="2022-08-24T18:06:27+08:00">2022-08-24</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/python-decorator/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/python-decorator/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+            <div class="post-description">通过Python的装饰器设计模式实现对函数运行时间的计时，重点分析如何解决递归函数，Google Colab初试</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Python-装饰器"><a href="#Python-装饰器" class="headerlink" title="Python 装饰器"></a>Python 装饰器</h1><p>场景需求：需要对函数运行时间进行计时，希望能够自动化完成计时代码的插桩工作。</p>
+<p>难点：递归函数，举例来说，假设我调用fibonacci(4)，我不希望计时只计最外层的函数，而是希望每一个被调用的fibonacci()都输出，fib的调用层次如下图所示</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190247526.png" alt="image-20220604190247526"></p>
+<p>也就是计时器应该输出5次函数运行耗时</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/197643740">解决方案</a>，运行结果：</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20220604190426304.png" alt="image-20220604190426304"></p>
+<p>感想（？）：Python好强大</p>
+<h1 id="关于Python装饰器模式和函数式编程的关系："><a href="#关于Python装饰器模式和函数式编程的关系：" class="headerlink" title="关于Python装饰器模式和函数式编程的关系："></a>关于Python装饰器模式和函数式编程的关系：</h1><h1 id="Python-的-Decorator"><a href="#Python-的-Decorator" class="headerlink" title="Python 的 Decorator"></a>Python 的 Decorator</h1><blockquote>
+<p>Python 的 Decorator 在使用上和 Java 的 Annotation（以及 C# 的 Attribute）很相似，就是在方法名前面加一个 <a target="_blank" rel="noopener" href="https://my.oschina.net/xrf116">@XXX</a> 注解来为这个方法装饰一些东西。但是，Java&#x2F;C# 的 Annotation 也很让人望而却步，太过于复杂了。你要玩它，需要先了解一堆 Annotation 的类库文档，感觉几乎就是在学另外一门语言。</p>
+<p>而 Python 使用了一种相对于 Decorator Pattern 和 Annotation 来说非常优雅的方法，这种方法不需要你去掌握什么复杂的 OO 模型或是 Annotation 的各种类库规定，完全就是语言层面的玩法：一种函数式编程的技巧。</p>
+<p>这是我最喜欢的一个模式了，也是一个挺好玩儿的东西，这个模式动用了函数式编程的一个技术——用一个函数来构造另一个函数。</p>
+<p>好了，我们先来点感性认识，看一个 Python 修饰器的 Hello World 代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>(<span class="params">fn</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>():</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;hello, %s&quot;</span> % fn.__name__</span><br><span class="line">        fn()</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;goodbye, %s&quot;</span> % fn.__name__</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@hello</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">Hao</span>():</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;i am Hao Chen&quot;</span></span><br><span class="line"></span><br><span class="line">Hao()</span><br></pre></td></tr></table></figure>
+
+<p>代码的执行结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python hello.py</span><br><span class="line">hello, Hao</span><br><span class="line">i am Hao Chen</span><br><span class="line">goodbye, Hao</span><br></pre></td></tr></table></figure>
+
+<p>你可以看到如下的东西：</p>
+<ol>
+<li>函数<code>Hao</code>前面有个 <a target="_blank" rel="noopener" href="https://my.oschina.net/flyinghawk">@hello</a> 的“注解”，<code>hello</code>就是我们前面定义的函数<code>hello</code>；</li>
+<li>在<code>hello</code>函数中，其需要一个<code>fn</code>的参数（这就是用来做回调的函数）；</li>
+<li>hello 函数中返回了一个 inner 函数<code>wrapper</code>，这个<code>wrapper</code>函数回调了传进来的<code>fn</code>，并在回调前后加了两条语句。</li>
+</ol>
+<p>对于 Python 的这个 @注解语法糖（syntactic sugar）来说，当你在用某个 @decorator 来修饰某个函数<code>func</code>时，如下所示:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>其解释器会解释成下面这样的语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func = decorator(func)</span><br></pre></td></tr></table></figure>
+
+<p>嘿！这不就是把一个函数当参数传到另一个函数中，然后再回调吗？是的。但是，我们需要注意，那里还有一个赋值语句，把 decorator 这个函数的返回值赋值回了原来的<code>func</code>。</p>
+<p>我们再来看一个带参数的玩法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">makeHtmlTag</span>(<span class="params">tag, *args, **kwds</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">real_decorator</span>(<span class="params">fn</span>):</span><br><span class="line">        css_class = <span class="string">&quot; class=&#x27;&#123;0&#125;&#x27;&quot;</span>.<span class="built_in">format</span>(kwds[<span class="string">&quot;css_class&quot;</span>]) \</span><br><span class="line">                                     <span class="keyword">if</span> <span class="string">&quot;css_class&quot;</span> <span class="keyword">in</span> kwds <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapped</span>(<span class="params">*args, **kwds</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&lt;&quot;</span>+tag+css_class+<span class="string">&quot;&gt;&quot;</span> + fn(*args, **kwds) + <span class="string">&quot;&lt;/&quot;</span>+tag+<span class="string">&quot;&gt;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> wrapped</span><br><span class="line">    <span class="keyword">return</span> real_decorator</span><br><span class="line"></span><br><span class="line"><span class="meta">@makeHtmlTag(<span class="params">tag=<span class="string">&quot;b&quot;</span>, css_class=<span class="string">&quot;bold_css&quot;</span></span>)</span></span><br><span class="line"><span class="meta">@makeHtmlTag(<span class="params">tag=<span class="string">&quot;i&quot;</span>, css_class=<span class="string">&quot;italic_css&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> hello()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &lt;b class=&#x27;bold_css&#x27;&gt;&lt;i class=&#x27;italic_css&#x27;&gt;hello world&lt;/i&gt;&lt;/b&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面这个例子中，我们可以看到：<code>makeHtmlTag</code>有两个参数。所以，为了让<code>hello = makeHtmlTag(arg1, arg2)(hello)</code>成功，<code>makeHtmlTag</code>必需返回一个 decorator（这就是为什么我们在<code>makeHtmlTag</code>中加入了<code>real_decorator()</code>）。</p>
+<p>这样一来，我们就可以进入到 decorator 的逻辑中去了——decorator 得返回一个 wrapper，wrapper 里回调<code>hello</code>。看似那个<code>makeHtmlTag()</code>写得层层叠叠，但是，已经了解了本质的我们觉得写得很自然。</p>
+<p>我们再来看一个为其它函数加缓存的示例:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">memoization</span>(<span class="params">fn</span>):</span><br><span class="line">    cache = &#123;&#125;</span><br><span class="line">    miss = <span class="built_in">object</span>()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @wraps(<span class="params">fn</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args</span>):</span><br><span class="line">        result = cache.get(args, miss)</span><br><span class="line">        <span class="keyword">if</span> result <span class="keyword">is</span> miss:</span><br><span class="line">            result = fn(*args)</span><br><span class="line">            cache[args] = result</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@memoization</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> n</span><br><span class="line">    <span class="keyword">return</span> fib(n - <span class="number">1</span>) + fib(n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上面这个例子中，是一个斐波那契数例的递归算法。我们知道，这个递归是相当没有效率的，因为会重复调用。比如：我们要计算 fib(5)，于是其分解成<code>fib(4) + fib(3)</code>，而<code>fib(4)</code>分解成<code>fib(3) + fib(2)</code>，<code>fib(3)</code>又分解成<code>fib(2) + fib(1)</code>……你可看到，基本上来说，<code>fib(3)</code>,<code>fib(2)</code>,<code>fib(1)</code>在整个递归过程中被调用了至少两次。</p>
+<p>而我们用 decorator，在调用函数前查询一下缓存，如果没有才调用，有了就从缓存中返回值。一下子，这个递归从二叉树式的递归成了线性的递归。<code>wraps</code>的作用是保证<code>fib</code>的函数名不被<code>wrapper</code>所取代。</p>
+</blockquote>
+<p>​                                                                                                                                                          引用自<a target="_blank" rel="noopener" href="https://mendylee.gitbooks.io/geeker-study-courses/content/bian-cheng-fan-shi-pian.html">编程范式篇</a>，2022年8月20日记</p>
+<h1 id="Google-Colab"><a href="#Google-Colab" class="headerlink" title="Google Colab"></a>Google Colab</h1><p>测试代码：</p>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1GML_i9JVwJKSGYCPL8_Mi2CXixXix6DF?usp=sharing">https://colab.research.google.com/drive/1GML_i9JVwJKSGYCPL8_Mi2CXixXix6DF?usp=sharing</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/" rel="prev" title="代理技术">
+                  <i class="fa fa-chevron-left"></i> 代理技术
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E5%A4%A7%E5%AD%A6/" rel="next" title="大学">
+                  大学 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhuZikang</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-05-28 19:13:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-CN","enable":true,"serverURL":"https://hexo-review.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"libUrl":"https://unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/python-decorator/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>
