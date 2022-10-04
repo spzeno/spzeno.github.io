@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="google-site-verification" content="bfIakpyl_YkDv32BYrtlFMM8_I0pBCVcwra8lIX4Rw8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha256-xejo6yLi6vGtAjcMIsY8BHdKsLg7QynVlFMzdQgUuy8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"spzeno.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.3","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="VIVADO通过mmi文件更新bit文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VIVADO通过mmi文件更新bit文件">
+<meta property="og:url" content="https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="ZhuZikang&#39;s Github Page">
+<meta property="og:description" content="VIVADO通过mmi文件更新bit文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004175430386.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004175650593.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004194809897.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195107660.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195426366.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195905607.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004201112604.png">
+<meta property="og:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004201424658.png">
+<meta property="article:published_time" content="2022-10-04T12:50:53.000Z">
+<meta property="article:modified_time" content="2022-10-04T12:52:46.222Z">
+<meta property="article:author" content="ZhuZikang">
+<meta property="article:tag" content="fpga vivado bram">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004175430386.png">
+
+
+<link rel="canonical" href="https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/","path":"VIVADO通过mmi文件更新bit文件/","title":"VIVADO通过mmi文件更新bit文件"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>VIVADO通过mmi文件更新bit文件 | ZhuZikang's Github Page</title>
+  
+
+
+
+
+<link rel="dns-prefetch" href="https://hexo-review.vercel.app/">
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ZhuZikang's Github Page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">VIVADO通过mmi文件更新bit文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E5%BC%82%E4%B9%8B%E5%A4%84"><span class="nav-number">1.0.1.</span> <span class="nav-text">差异之处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.0.2.</span> <span class="nav-text">具体实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E6%88%90BRAM"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">生成BRAM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E6%AF%8F%E4%B8%AARAMB36%E7%9A%84%E8%A1%8C%E5%88%97%E8%8C%83%E5%9B%B4"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">确定每个RAMB36的行列范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E5%86%99mmi%E6%96%87%E4%BB%B6"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">编写mmi文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%86%E5%A4%87mem%E6%96%87%E4%BB%B6"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">准备mem文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#updatemem"><span class="nav-number">1.0.2.5.</span> <span class="nav-text">updatemem</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ZhuZikang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/spzeno" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;spzeno" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:spzeno02@gmail.com" title="E-Mail → mailto:spzeno02@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/spzeno2" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;spzeno2" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ZhuZikang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhuZikang's Github Page">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="VIVADO通过mmi文件更新bit文件 | ZhuZikang's Github Page">
+      <meta itemprop="description" content="VIVADO通过mmi文件更新bit文件">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VIVADO通过mmi文件更新bit文件
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-10-04 20:50:53 / 修改时间：20:52:46" itemprop="dateCreated datePublished" datetime="2022-10-04T20:50:53+08:00">2022-10-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+            <div class="post-description">VIVADO通过mmi文件更新bit文件</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="VIVADO通过mmi文件更新bit文件"><a href="#VIVADO通过mmi文件更新bit文件" class="headerlink" title="VIVADO通过mmi文件更新bit文件"></a>VIVADO通过mmi文件更新bit文件</h1><p>背景：有一个MCU的工程，这个工程有很多HDL文件，由于某些原因需要联合使用synplify和vivado，即先通过synplify综合，之后将edf网表文件交给vivado进行p&amp;r。</p>
+<p>MCU的启动ROM的内容初始化是这样做的：</p>
+<ol>
+<li>首先使用vivado的BRAM IP生成符合条件的IP</li>
+<li>在HDL文件中添加生成的IP文件中的的stub文件以通过synplify综合</li>
+<li>vivado添加edf文件后会将这个ROM当作一个black box，添加第一步生成的IP后即可进行impl、p&amp;r</li>
+</ol>
+<p>最开始时使用的方法是通过COE文件初始化BRAM，由于工程很大，如果每次ROM的内容有变动的话都需要重新进行第一步、第三步，而第三步每次都需要重新p&amp;r相当耗费时间。因此开始考虑能不能通过直接修改比特流来修改ROM的初始化内容，在参考了以下资料后发现是可以实现的：</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1529565">干货：Vivado 直接修改RAM初始化文件，避免重新综合、实现的方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/K_O_Carnivist/article/details/50281921">Vivado中用HDL定义BRAM存储器并用updatemem合成bit文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.linmingjie.cn/index.php/archives/279/">Vivado通过mmi文件更新bit文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.xilinx.com/r/en-US/ug1580-updatemem/Introduction">UpdateMEM User Guide (UG1580)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6786021270dd">Vivado BRAM资源使用</a></p>
+<h3 id="差异之处"><a href="#差异之处" class="headerlink" title="差异之处"></a>差异之处</h3><p>我使用的vivado版本为2019.1，与《<a target="_blank" rel="noopener" href="https://blog.csdn.net/K_O_Carnivist/article/details/50281921">Vivado中用HDL定义BRAM存储器并用updatemem合成bit文件</a>》这篇文章的差异之处在于我在RAMB36的cell properties中看不到这块bram的对应的行列范围。通过阅读UG1580和《Vivado BRAM资源使用》我发现需要想办法不通过cell properties人工确定每块bram的对应的行列范围。</p>
+<h3 id="具体实例"><a href="#具体实例" class="headerlink" title="具体实例"></a>具体实例</h3><h4 id="生成BRAM"><a href="#生成BRAM" class="headerlink" title="生成BRAM"></a>生成BRAM</h4><p>我的ROM IP如图所示，需要注意的是它虽然名字叫2kx64但是实际上是4kx64，由于位宽为64位，为了方便起见，在algorithm中原语选择为256x72，这样我的ROM是8个并联，不用串联凑位宽。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004175430386.png" alt="image-20221004175430386"></p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004175650593.png" alt="image-20221004175650593"></p>
+<h4 id="确定每个RAMB36的行列范围"><a href="#确定每个RAMB36的行列范围" class="headerlink" title="确定每个RAMB36的行列范围"></a>确定每个RAMB36的行列范围</h4><p>经过我的测试，updatemem只能操作RAMB32（这个好像也就是不启用partial check的RAMB36），因此需要确保使用的BRAM资源全部均为36K BRAMs。</p>
+<p>使用到的8个RAMB36如下图所示</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004194809897.png" alt="image-20221004194809897"></p>
+<p>可以发现每个init行对应4个64位数据，右边的数据为放在ROM中的启动程序</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195107660.png" alt="image-20221004195107660"></p>
+<p>检查发现每个RAMB36单元通过下图方式输出64位，奇偶校验位不参与（奇偶校验位参与的情况能否使用updatemem未进行验证）</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195426366.png" alt="image-20221004195426366"></p>
+<p>同时需要记录每个RAMB36的坐标以编写mmi文件</p>
+<h4 id="编写mmi文件"><a href="#编写mmi文件" class="headerlink" title="编写mmi文件"></a>编写mmi文件</h4><p>参考UG1580，经过计算每个RAMB36包含4096个字节，每个AddressSpace只有一个BitLane，编写mmi文件如下所示。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">MemInfo</span> <span class="attr">Version</span>=<span class="string">&quot;1&quot;</span> <span class="attr">Minor</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Processor</span> <span class="attr">Endianness</span>=<span class="string">&quot;Little&quot;</span> <span class="attr">InstPath</span>=<span class="string">&quot;dummy&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_0&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;4095&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y19&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_1&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;4096&quot;</span> <span class="attr">End</span>=<span class="string">&quot;8191&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y21&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_2&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;8192&quot;</span> <span class="attr">End</span>=<span class="string">&quot;12287&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y22&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_3&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;12288&quot;</span> <span class="attr">End</span>=<span class="string">&quot;16383&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y20&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_4&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;16384&quot;</span> <span class="attr">End</span>=<span class="string">&quot;20479&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y23&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_5&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;20480&quot;</span> <span class="attr">End</span>=<span class="string">&quot;24575&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X2Y21&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_6&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;24576&quot;</span> <span class="attr">End</span>=<span class="string">&quot;28671&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X1Y24&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">AddressSpace</span> <span class="attr">Name</span>=<span class="string">&quot;axi_rom_7&quot;</span> <span class="attr">Begin</span>=<span class="string">&quot;28672&quot;</span> <span class="attr">End</span>=<span class="string">&quot;32767&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">BitLane</span> <span class="attr">MemType</span>=<span class="string">&quot;RAMB32&quot;</span> <span class="attr">Placement</span>=<span class="string">&quot;X2Y22&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">DataWidth</span> <span class="attr">MSB</span>=<span class="string">&quot;63&quot;</span> <span class="attr">LSB</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">AddressRange</span> <span class="attr">Begin</span>=<span class="string">&quot;0&quot;</span> <span class="attr">End</span>=<span class="string">&quot;511&quot;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">Parity</span> <span class="attr">ON</span>=<span class="string">&quot;false&quot;</span> <span class="attr">NumBits</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">BitLane</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">BusBlock</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AddressSpace</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">  <span class="tag">&lt;/<span class="name">Processor</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Option</span> <span class="attr">Name</span>=<span class="string">&quot;Part&quot;</span> <span class="attr">Val</span>=<span class="string">&quot;xc7vx485tffg1761-2&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Config</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">MemInfo</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="准备mem文件"><a href="#准备mem文件" class="headerlink" title="准备mem文件"></a>准备mem文件</h4><p>接下来就是mem文件了，注意每个RAMB36的对应一个开始地址指示符号，例如下图第一个RAMB36开始地址为0x0，第二个RAMB36开始地址为0x1000（即4096）。另外还需要注意数据的大小端，这里需要转换一下大小端。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004195905607.png" alt="image-20221004195905607"></p>
+<h4 id="updatemem"><a href="#updatemem" class="headerlink" title="updatemem"></a>updatemem</h4><p>以上准备工作完成之后便可以通过<code>updatemem -debug -meminfo xxx.mmi -data xxx.mem -bit xxx.bit -proc dummy -out new.bit -force</code>来生成新的bit文件了。如无意外，-debug选项会显示每个被重新初始化的RAMB36的数据。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004201112604.png" alt="image-20221004201112604"></p>
+<p>最后将新生成的bit烧录，验证是否成功。</p>
+<p><img src="https://md-pic-bed.oss-cn-hongkong.aliyuncs.com/img/image-20221004201424658.png" alt="image-20221004201424658"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/fpga-vivado-bram/" rel="tag"># fpga vivado bram</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/lenet5/" rel="prev" title="lenet5">
+                  <i class="fa fa-chevron-left"></i> lenet5
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhuZikang</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-05-28 19:13:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-CN","enable":true,"serverURL":"https://hexo-review.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"libUrl":"https://unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>
