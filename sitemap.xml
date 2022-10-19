@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/</loc>
+    <loc>https://spzeno.github.io/%E6%96%87%E7%AB%A0%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</loc>
     
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +13,16 @@
   <url>
     <loc>https://spzeno.github.io/%E4%BB%A3%E7%90%86%E6%8A%80%E6%9C%AF/</loc>
     
-    <lastmod>2022-08-24</lastmod>
+    <lastmod>2022-10-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://spzeno.github.io/VIVADO%E9%80%9A%E8%BF%87mmi%E6%96%87%E4%BB%B6%E6%9B%B4%E6%96%B0bit%E6%96%87%E4%BB%B6/</loc>
+    
+    <lastmod>2022-10-04</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -85,7 +94,7 @@
 
   <url>
     <loc>https://spzeno.github.io/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -93,42 +102,42 @@
   
   <url>
     <loc>https://spzeno.github.io/tags/Hexo/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://spzeno.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://spzeno.github.io/tags/Python/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://spzeno.github.io/tags/VPN/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://spzeno.github.io/tags/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://spzeno.github.io/tags/fpga-vivado-bram/</loc>
-    <lastmod>2022-10-04</lastmod>
+    <lastmod>2022-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
